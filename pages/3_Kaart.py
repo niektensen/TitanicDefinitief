@@ -8,7 +8,7 @@ import plotly.express as px
 # ======================
 # Data inladen en opschonen
 # ======================
-df = pd.read_csv(r"C:\Users\niekt\Downloads\Titanic case 2.0\data\train.csv")
+df = pd.read_csv(("data/train.csv"))
 
 # Cabin droppen
 df.drop(columns=['Cabin'], inplace=True)

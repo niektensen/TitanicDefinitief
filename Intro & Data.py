@@ -30,7 +30,7 @@ with st.container(border=True):
     )
 
 #Data inladen en weergeven
-df = pd.read_csv(r"C:\Users\niekt\Downloads\Titanic case 2.0\data\train.csv")
+df = pd.read_csv("data/train.csv")
 
 st.header("Data exploratie")
 
@@ -73,7 +73,7 @@ fig_missing = px.bar(
 st.plotly_chart(fig_missing, use_container_width=True)
 
 # Data inladen
-df = pd.read_csv(r"C:\Users\niekt\Downloads\Titanic case 2.0\data\train.csv")
+df = pd.read_csv("data/train.csv")
 
 # 1️⃣ Cabin kolom droppen
 df = df.drop(columns=['Cabin'])

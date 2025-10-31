@@ -8,10 +8,10 @@ from PIL import Image
 from statsmodels.stats.proportion import proportion_confint
 import sys
  
-sys.path.append(r"C:\Users\niekt\Downloads\Titanic case 2.0")  # Zorg dat load_data.py vindbaar is (indien nodig)
+sys.path.append(("data/train.csv"))  # Zorg dat load_data.py vindbaar is (indien nodig)
  
 # Data inladen
-df = pd.read_csv(r"C:\Users\niekt\Downloads\Titanic case 2.0\data\train.csv")
+df = pd.read_csv(("data/train.csv"))
  
 # 1 - Cabin kolom droppen
 if 'Cabin' in df.columns:
@@ -293,7 +293,7 @@ else:
     st.header("Oude Visualisaties")
  
     # ===================== DATA INLADEN =====================
-    train = pd.read_csv(r"C:\Users\niekt\Downloads\Titanic case 2.0\data\train.csv")
+    train = pd.read_csv(("data/train.csv"))
     train['Embarked'].fillna(train['Embarked'].mode()[0], inplace=True)
     train['Age'].fillna(train['Age'].median(), inplace=True)
     if 'Cabin' in train.columns:
@@ -442,7 +442,7 @@ else:
         st.pyplot(fig)
  
     # ===================== AFBEELDING =====================
-    img_path = r"C:\Users\niekt\Downloads\Titanic case 2.0\images\correlatie_heatmap_dummies.png"
+    img_path = "images/correlatie_heatmap_dummies.png"
     try:
         img = Image.open(img_path)
         st.subheader("Correlatieheatmap")
