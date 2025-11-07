@@ -37,20 +37,13 @@ def fill_age(row):
 if 'Age' in df.columns:
     df['Age'] = df.apply(fill_age, axis=1)
  
-# Check voor missende waarden (optioneel debugging)
-# print("Aantal missende waarden per kolom:")
-# print(df.isna().sum())
  
-# Voeg kolom 'Alleenreiziger' / 'IsAlone' toe
 df["Alleenreiziger"] = df.apply(lambda x: "Ja" if (x.get("SibSp", 0) == 0 and x.get("Parch", 0) == 0) else "Nee", axis=1)
 df["IsAlone"] = ((df.get("SibSp", 0) + df.get("Parch", 0)) == 0).astype(int)
  
-# Voeg kolom 'Titel' / 'Title' toe (haal het stukje tussen komma en punt)
 df["Titel"] = df["Name"].str.extract(r",\s*([A-Za-z]+)\.")[0].str.strip()
-# Maak ook een Engelse 'Title' kolom voor compatibiliteit met verschillende secties
 df["Title"] = df["Titel"]
  
-# Standaard pagina-instellingen
 st.set_page_config(page_title="Titanic Dashboard Visualisaties", layout="wide")
  
 # === Sidebar: keuze oud of nieuwe visualisaties ===
@@ -187,23 +180,18 @@ if visual_choice == "Nieuwe visualisaties":
  
     st.plotly_chart(fig, use_container_width=True)
  
-    # ======================
-    # Hier voegen we jouw interactieve correlatie-matrix code toe
-    # ======================
+
     st.markdown("---")
     st.header("Interactieve Correlatie Matrix")
     sns.set_style('whitegrid')
  
-    # Werk met een kopie zodat we originele df niet per ongeluk aanpassen
     df_corr = df.copy()
  
-    # Zorg dat Age en Fare geen missende waarden hebben voor de binning
     if 'Age' in df_corr.columns:
         df_corr['Age'] = df_corr['Age'].fillna(df_corr['Age'].median())
     if 'Fare' in df_corr.columns:
         df_corr['Fare'] = df_corr['Fare'].fillna(df_corr['Fare'].median())
  
-    # Maak Age_bin en Fare_bin indien nog niet aanwezig
     if 'Age_bin' not in df_corr.columns:
         df_corr['Age_bin'] = pd.cut(df_corr['Age'], bins=[0, 12, 20, 40, 120], labels=['Kind', 'Tiener', 'Volwassen', 'Oud'])
     if 'Fare_bin' not in df_corr.columns:
@@ -219,8 +207,6 @@ if visual_choice == "Nieuwe visualisaties":
     if 'IsAlone' not in df_corr.columns:
         df_corr['IsAlone'] = (df_corr['FamilySize'] == 1).astype(int)
  
-    # Maak dummy variabelen - let op: gebruik 'Title' (Engelse naam) als kolom voor compatibiliteit
-    # Zorg dat 'Title' aanwezig is
     if 'Title' not in df_corr.columns:
         df_corr['Title'] = df_corr['Name'].str.extract(r",\s*([A-Za-z]+)\.")[0].str.strip()
  
@@ -231,11 +217,9 @@ if visual_choice == "Nieuwe visualisaties":
         drop_first=False
     )
  
-    # 2. Definieer de selectie-opties
     numeric_options = ['Survived', 'Age', 'Fare', 'FamilySize', 'IsAlone', 'SibSp', 'Parch']
     dummy_options = ['Pclass', 'Sex', 'Embarked', 'Title', 'Age_bin', 'Fare_bin']
  
-    # Mapping van de "basis" naam naar de dummy prefix
     dummy_prefixes = {
         'Pclass': 'Pclass_',
         'Sex': 'Sex_',
@@ -247,14 +231,13 @@ if visual_choice == "Nieuwe visualisaties":
  
     all_options = sorted(numeric_options + dummy_options)
  
-    # 3. Maak het "slimme" multiselect menu
+
     selected_options = st.multiselect(
         "Kies variabelen voor de correlatiematrix:",
         options=all_options,
         default=['Survived', 'FamilySize', 'IsAlone', 'Title', 'Pclass']
     )
  
-    # 4. Vertaal de selecties naar de uiteindelijke kolomlijst
     final_selected_cols = []
     for option in selected_options:
         if option in numeric_options:
@@ -264,12 +247,10 @@ if visual_choice == "Nieuwe visualisaties":
             dummy_cols = [col for col in df_corr_dummied.columns if col.startswith(prefix)]
             final_selected_cols.extend(dummy_cols)
  
-    # 5. Plot de heatmap
     if len(final_selected_cols) > 1:
         final_selected_cols = list(dict.fromkeys(final_selected_cols))
         existing_cols = [col for col in final_selected_cols if col in df_corr_dummied.columns]
  
-        # Zorg dat 'Survived' numeriek is (0/1). In jouw df is Survived normaal al 0/1.
         if 'Survived' in existing_cols:
             if df_corr_dummied['Survived'].dtype == 'object':
                 df_corr_dummied['Survived'] = df_corr_dummied['Survived'].map({'Ja': 1, 'Nee': 0})
@@ -284,7 +265,6 @@ if visual_choice == "Nieuwe visualisaties":
     else:
         st.info("Selecteer ten minste twee variabelen om een correlatiematrix te tonen.")
  
-    # Reset stijl voor het geval er nog plots na komen
     sns.set_style('white')
  
  

@@ -15,4 +15,3 @@ Daarnaast correleren passagiersklasse en de bijbehorende ticketprijs significant
 Ook de familiegrootte vertoont een duidelijk verband; alleen reizen correleert negatief met overleving, terwijl reizen in een kleine groep positief correleert.
 Deze factoren samen geven een duidelijk beeld van de indicatoren die samenhangen met de overlevingskans.
 """)
-# --- EINDE AANPASSING ---
